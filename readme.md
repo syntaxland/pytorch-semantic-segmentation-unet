@@ -1,38 +1,56 @@
 ```md
-# PyTorch U-Net Semantic Segmentation (Carvana)
+# 🧠 PyTorch U-Net Semantic Segmentation (Carvana)
 
-Simple **U-Net** implementation in **PyTorch** for binary semantic segmentation, using the **Carvana Image Masking Challenge** dataset.
+![PyTorch](https://img.shields.io/badge/PyTorch-2.x-ee4c2c?logo=pytorch)
+![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## Project Structure
+A clean and minimal **U-Net implementation in PyTorch** for **binary semantic segmentation**, trained on the **Carvana Image Masking Challenge** dataset.
+
+---
+
+## 📌 Features
+
+- ✅ U-Net architecture from scratch
+- ✅ Mixed Precision Training (AMP)
+- ✅ Dice Score + Pixel Accuracy
+- ✅ Albumentations augmentations
+- ✅ Automatic checkpoint saving
+- ✅ Prediction image export
+
+---
+
+## 🏗 Project Structure
 
 ```
 
 pytorch-semantic-segmentation-unet/
-├─ data/
-│  ├─ train_images/
-│  ├─ train_masks/
-│  ├─ val_images/
-│  └─ val_masks/
-├─ saved_images/                 # prediction outputs saved during training
-├─ dataset.py                    # CarvanaDataset (loads images + masks)
-├─ model.py                      # U-Net architecture
-├─ train.py                      # training loop + evaluation + saving predictions
-├─ utils.py                      # loaders, checkpointing, accuracy + dice
-└─ UNET_architecture.png
+│
+├── data/
+│   ├── train_images/
+│   ├── train_masks/
+│   ├── val_images/
+│   └── val_masks/
+│
+├── saved_images/          # Saved predictions
+├── dataset.py             # Dataset loader
+├── model.py               # U-Net architecture
+├── train.py               # Training script
+├── utils.py               # Helper functions
+└── UNET_architecture.png  # Architecture diagram
 
 ```
 
-## Dataset
+---
 
-This project expects the Carvana dataset layout:
+## 📊 Dataset
 
-- Images: `.jpg`
-- Masks: corresponding `*_mask.gif` files
+This project uses:
 
-Download: Carvana Image Masking Challenge (Kaggle)  
+**Carvana Image Masking Challenge (Kaggle)**  
 https://www.kaggle.com/competitions/carvana-image-masking-challenge/data
 
-### Place files like this
+### Expected Folder Format
 
 ```
 
@@ -44,56 +62,130 @@ data/val_masks/yyy_mask.gif
 
 ````
 
-> Tip: Create a small validation split by moving ~10–20% of training images/masks into `val_*`.
+> 🔹 Masks must follow naming convention:  
+> `image_name.jpg → image_name_mask.gif`
 
-## Install
+---
 
-Create and activate a virtualenv (optional):
+## ⚙️ Installation
+
+### 1️⃣ Clone repo
+
+```bash
+git clone <your-repo-url>
+cd pytorch-semantic-segmentation-unet
+````
+
+### 2️⃣ Create virtual environment (optional but recommended)
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-````
-
-Install dependencies:
-
-```bash
-pip install torch torchvision albumentations opencv-python pillow tqdm
 ```
 
-## Train
+### 3️⃣ Install dependencies
 
-Run training:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🚀 Training
+
+Run:
 
 ```bash
 python train.py
 ```
 
-By default, training runs for **3 epochs** and will:
+During training:
 
-* save checkpoints to `my_checkpoint.pth.tar`
-* print **pixel accuracy** and **Dice score**
-* save predicted masks into `saved_images/`
+* 📈 Accuracy and Dice score are printed
+* 💾 Checkpoints saved as `my_checkpoint.pth.tar`
+* 🖼 Predictions saved in `saved_images/`
 
-## Config
+---
 
-Edit these in `train.py` to match your machine/data:
+## 🔧 Configuration
 
-* `TRAIN_IMG_DIR`, `TRAIN_MASK_DIR`, `VAL_IMG_DIR`, `VAL_MASK_DIR`
-* `IMAGE_HEIGHT`, `IMAGE_WIDTH`
-* `BATCH_SIZE`, `NUM_EPOCHS`
-* `LOAD_MODEL = True/False`
+You can edit hyperparameters inside `train.py`:
 
-## Output
+```python
+LEARNING_RATE = 1e-4
+BATCH_SIZE = 16
+NUM_EPOCHS = 3
+IMAGE_HEIGHT = 160
+IMAGE_WIDTH = 240
+```
 
-After training, check:
+To resume training:
 
-* `saved_images/pred_*.png` → predicted masks
-* `saved_images/*.png` → ground-truth masks (saved alongside)
+```python
+LOAD_MODEL = True
+```
 
-## Notes
+---
 
-* Loss: `BCEWithLogitsLoss()` (binary segmentation)
-* Predictions: `sigmoid` + threshold `> 0.5`
-* Metric: Dice score computed in `utils.py`
+## 📐 Model Details
+
+* Architecture: **U-Net**
+* Loss: `BCEWithLogitsLoss`
+* Output: Binary mask
+* Activation (in eval): `sigmoid`
+* Threshold: `0.5`
+* Metric: Dice Score
+
+---
+
+## 📷 Example Output
+
+After training:
+
+```
+saved_images/
+├── pred_0.png
+├── pred_1.png
+└── ...
+```
+
+---
+
+## 🖥 Device Support
+
+Automatically detects:
+
+```python
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+```
+
+Works on:
+
+* ✅ CPU
+* ✅ NVIDIA GPU (CUDA)
+
+---
+
+## 🧠 Architecture
+
+See included diagram:
+
+`UNET_architecture.png`
+
+---
+
+## 📜 License
+
+MIT License — free to use and modify.
+
+---
+
+## 🙌 Credits
+
+Based on U-Net implementation inspired by
+Aladdin Persson's Machine Learning Collection.
+
+```
+
+---
 
